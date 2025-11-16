@@ -1,125 +1,217 @@
-# Memory Palace Bonanza
+<div align="center">
 
-A Next.js + three.js workshop where participants collaboratively add memories (3D models) inside a digital Parthenon. This project bakes in all the debugging and observability lessons from the Parthenon Memory Workshop postmortem.
+# 🏛️ Palacio de la Memoria · Bonanza
 
-## ⚠️ Run a local server (never file://)
+Workshop colaborativo para añadir tu propio objeto 3D dentro de un Parthenon compartido. Practicamos Git, GitHub y coding asistido por IA mientras construimos algo bello juntos.
 
-This experience must be served over HTTP/HTTPS or it will fail to load glTF assets. Choose one of these options:
+</div>
 
-### Option A: Next.js dev server
+---
+
+## 🎯 Objetivo del Taller
+- ✅ Colaboración en Git: ramas, commits y PRs
+- ✅ Uso de IA (Claude, Cursor, etc.) para generar y ajustar código
+- ✅ Trabajo con glTF/glb y escenas en three.js
+- ✅ Flujo profesional de trabajo en equipo
+
+> Al final tendrás tu “memoria” permanente dentro del proyecto común.
+
+---
+
+## 📋 Antes del Taller
+
+### 1. Instala herramientas
+- Node.js ≥ 18 → <https://nodejs.org>
+- Git → <https://git-scm.com>
+- VS Code (recomendado) → <https://code.visualstudio.com>
+
+### 2. Prepara el repo
+
 ```bash
+git clone https://github.com/StewartalsopIII/memory-palace-bonanza.git
+cd memory-palace-bonanza
 npm install
 npm run dev
-# Visit http://localhost:3000
 ```
 
-### Option B: Production build + static server
-```bash
-npm install
-npm run build
-npm run start              # Next.js server
-# OR export & serve statically
-npm run build && npx next export
-npx http-server ./out -p 4173
-```
+Abre <http://localhost:3000> y confirma:
 
-### Option C: Python quick server (for the exported /out folder only)
-```bash
-npm run build && npx next export
-cd out
-python3 -m http.server 4173
-```
+- Parthenon visible
+- Cubo rojo de prueba
+- Panel debug (WebGL ✓, Renderer ✓, FPS)
 
-If you see the app trying to run via `file://`, it will immediately show a blocking warning telling you to use a local server.
+Si algo falla, revisa `TROUBLESHOOTING.md` o avisa antes del workshop.
 
 ---
 
-## ✅ Verification Checklist
+## 🚀 Durante el Taller
 
-Open http://localhost:3000 and confirm:
+### Fase 1 · Encuentra tu modelo (15-20 min)
+1. Ve a [Sketchfab](https://sketchfab.com).
+2. Filtra por “Downloadable” + “Free”.
+3. Busca “low poly” para modelos ligeros.
+4. En “Model Information” revisa:
+   - Tamaño < **10 MB**
+   - Triángulos < **500 k** (ideal < 100 k)
+5. Al descargar:
+   - Botón **Download**
+   - Elegir **glTF Binary (.glb)**  
+   - Renombra a `memory-tu-nombre.glb` (ej. `memory-stewart.glb`)
 
-1. Debug panel (top-right) shows `WebGL: Supported` and `Renderer: Active` in green.
-2. Models counter is at least `2` (test cube + Parthenon) after loading finishes.
-3. FPS counter updates around ~60 (higher with smaller windows, lower on older GPUs).
-4. A glowing red cube is floating near the center (sanity-check primitive).
-5. Running `window.DEBUG.addTestCube()` in DevTools adds another cube immediately.
-6. Navigating to http://localhost:3000/models/test-cube.glb downloads the simple sample glTF.
+### Fase 2 · Crea tu rama (5 min)
 
-If any of these fail, jump to [TROUBLESHOOTING.md](TROUBLESHOOTING.md).
-
----
-
-## Project Structure
-
-```
-app/                         # Next.js App Router entrypoints
-  layout.tsx
-  page.tsx
-public/models/               # Static models served by Next.js
-  parthenon.glb
-  test-cube.glb
-  memory-objects/
-src/components/
-  ParthenonScene.tsx         # Main three.js scene + debug infrastructure
-src/memory-objects/
-  index.ts                   # Imports all participant registrars
-  sampleMemory.ts            # Example participant script
-scripts/
-  memory-example.js          # Copy/paste template for new participants
-  debug-helpers.js           # Console snippets to sanity-check rendering
-README.md
-QUICKSTART.md                # TL;DR setup directions
-TROUBLESHOOTING.md           # Expanded debugging playbook
-```
-
----
-
-## Memory Object Workflow
-
-1. Place your `.glb` file in `public/models/memory-objects/your-name/model.glb`.
-2. Copy `scripts/memory-example.js` into `src/memory-objects/yourMemory.ts`.
-3. Update the name, model path, and transforms in that file.
-4. Import your registrar in `src/memory-objects/index.ts` and add it to the `registrars` array.
-5. Run `npm run dev`, refresh the browser, and confirm the debug panel increments the model count.
-
-`window.addMemoryObject` is also exposed for rapid iteration directly from the console.
-
----
-
-## Debug & Telemetry Features
-
-- **On-screen debug panel** (WebGL status, renderer status, models loaded, FPS, scene children).
-- **Verbose console logging** with green checkmarks for every init step.
-- **Helper overlay** that blocks the UI until the Parthenon finishes loading.
-- **`window.DEBUG` namespace** exposing `scene`, `camera`, `renderer`, `THREE`, `addTestCube`, and `addMemoryObject`.
-- **Test cube** and **test glTF model** guaranteed to load before any third-party assets.
-- **Automatic camera framing** via bounding box analysis with explicit logs.
-
----
-
-## Testing Matrix
-
-Before inviting participants, confirm the app works on:
-
-- ✅ Chrome (latest) – baseline.
-- ✅ Firefox (latest) – verifies WebGL2 path.
-- ✅ Safari 17+ – ensures Metal backend behaves.
-
-During testing:
-
-- Toggle DevTools cache disabled (Network tab → ☐ "Disable cache" when open).
-- Try an incognito/private window to flush stale assets.
-- Watch the FPS counter while adding multiple memory objects (aim for 30+ FPS).
-
----
-
-## Helpful Commands
+⚠️ Nunca trabajes directo en `main`.
 
 ```bash
-npm run dev        # Local development server with hot reload
-npm run lint       # ESLint via eslint-config-next
-npm run build      # Production build
-npm run start      # Start built Next.js server
+git checkout main
+git pull origin main
+git checkout -b memory-tu-nombre
 ```
 
-See [QUICKSTART.md](QUICKSTART.md) for a condensed reference and [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for issue-specific playbooks.
+> Cada branch es tu sandbox personal; nadie pisa el trabajo de los demás.
+
+### Fase 3 · Agrega tu modelo (10 min)
+
+1. Copia tu `.glb` a:
+   ```
+   public/models/memory-objects/memory-tu-nombre.glb
+   ```
+2. Duplica el registrador:
+   ```bash
+   cp src/memory-objects/sampleMemory.ts \
+      src/memory-objects/memory-tu-nombre.ts
+   ```
+3. Edita `src/memory-objects/memory-tu-nombre.ts`:
+   ```ts
+   export const tuNombreMemory = {
+     name: "Objeto de [Tu Nombre]",
+     modelPath: "/models/memory-objects/memory-tu-nombre.glb",
+     position: [0, 0, 0],
+     rotation: [0, 0, 0],
+     scale: [1, 1, 1],
+   };
+   ```
+4. Registra en `src/memory-objects/index.ts`:
+   ```ts
+   import { tuNombreMemory } from "./memory-tu-nombre";
+
+   export const registrars = [
+     sampleMemory,
+     tuNombreMemory,
+   ];
+   ```
+
+### Fase 4 · Ajusta posición con IA (15 min)
+
+1. Inicia dev server:
+   ```bash
+   npm run dev
+   ```
+2. Abre <http://localhost:3000>.
+3. Si no ves tu modelo, usa prompts como:
+   ```
+   "Mi modelo está bajo el piso, muévelo hacia arriba"
+   "Rota mi modelo 90° para que mire al oeste"
+   "Mi modelo es gigante, bájale la escala a 0.2"
+   ```
+4. Itera rápido en la consola:
+   ```js
+   window.DEBUG.addMemoryObject({
+     name: "Test",
+     modelPath: "/models/memory-objects/memory-tu-nombre.glb",
+     position: [5, 0, 5],
+     scale: [2, 2, 2],
+   });
+   ```
+   Luego copia los valores finales a tu archivo `.ts`.
+
+### Fase 5 · Guarda tu trabajo (5 min)
+
+```bash
+git status
+git add public/models/memory-objects/memory-tu-nombre.glb
+git add src/memory-objects/memory-tu-nombre.ts
+git add src/memory-objects/index.ts
+git commit -m "Agregar memoria de [Tu Nombre]"
+git push origin memory-tu-nombre
+```
+
+### Fase 6 · Pull Request (5 min)
+1. Ve al repo en GitHub.
+2. Haz clic en **Compare & pull request**.
+3. Usa este template:
+   ```markdown
+   ## Lo que agregué
+   - Nombre: [Tu Nombre]
+   - Modelo: [Descripción]
+   - Archivo: memory-tu-nombre.glb
+
+   ## Checklist
+   - [x] Tamaño < 10 MB
+   - [x] Registrador creado
+   - [x] index.ts actualizado
+   - [x] Probado localmente
+   ```
+4. Clic en **Create pull request**.
+
+### Fase 7 · Galería final (10 min)
+
+```bash
+git checkout main
+git pull origin main
+npm run dev
+```
+
+Disfruta el Parthenon lleno de memorias 🥳.
+
+---
+
+## 🛠️ Comandos útiles
+```bash
+git branch   # ver en qué rama estás
+git status   # archivos modificados
+```
+```js
+window.DEBUG.scene.children // inspecciona la escena
+window.DEBUG.addTestCube()  // cubo temporal
+```
+```bash
+npm run dev   # servidor local
+```
+
+---
+
+## ⚠️ Problemas comunes
+- **Modelo invisible** → revisa `modelPath`, DevTools y formato `.glb`.
+- **Modelo gigante/invisible** → ajusta `scale` (ej. `[0.1,0.1,0.1]`) y `position` (-20 a 20).
+- **Errores Git** → confirma que estás en tu rama (`git branch`).
+- **No puedo hacer push** → ¿hiciste `commit`?, ¿creaste tu branch?
+
+---
+
+## 📚 Recursos
+- Sketchfab → <https://sketchfab.com>
+- Git Cheat Sheet → <https://education.github.com/git-cheat-sheet-education.pdf>
+- Three.js Docs → <https://threejs.org/docs/>
+
+---
+
+## 🎓 Conceptos clave
+- **Rama Git**: copia personal para experimentar sin romper main.
+- **Commit**: punto de guardado con mensaje descriptivo.
+- **Pull Request**: pedir que integren tus cambios al repo central.
+- **Cero conflictos**: cada quien crea archivos con nombres únicos.
+
+---
+
+## 👨‍🏫 Filosofía del taller
+“Vibe coding”: aprender creando algo visualmente hermoso y significativo. La IA es tu copiloto y Git el pegamento entre personas. No buscamos perfección, sino proceso y colaboración.
+
+---
+
+## 📞 Soporte
+- Lee `TROUBLESHOOTING.md`
+- Pregunta en el Zoom
+- Comparte pantalla si necesitas ayuda
+
+¡Nos vemos en el taller! 🏛️✨
