@@ -29,7 +29,6 @@ declare global {
   }
 }
 
-const TEST_MODEL_PATH = "/models/test-cube.glb";
 const PARTHENON_MODEL_PATH = "/models/parthenon.glb";
 
 const panelRowStyle: CSSProperties = {
@@ -202,19 +201,6 @@ const ParthenonScene = () => {
     scene.add(ground);
     debugLog("Ground plane ready");
 
-    const testCube = new THREE.Mesh(
-      new THREE.BoxGeometry(8, 8, 8),
-      new THREE.MeshStandardMaterial({
-        color: 0xff5555,
-        emissive: 0xff3333,
-        emissiveIntensity: 0.3,
-      })
-    );
-    testCube.position.set(0, 6, 0);
-    testCube.castShadow = true;
-    scene.add(testCube);
-    debugLog("Test cube added (should be visible)");
-
     const loader = new GLTFLoader();
     let modelsLoaded = 0;
     const markModelLoaded = () => {
@@ -308,27 +294,6 @@ const ParthenonScene = () => {
         .join("x")})`);
     };
 
-    const loadSimpleModel = () => {
-      loader.load(
-        TEST_MODEL_PATH,
-        (gltf) => {
-          const model = gltf.scene;
-          model.position.set(-12, 3, -10);
-          model.scale.setScalar(3);
-          scene.add(model);
-          markModelLoaded();
-          debugLog("Simple test model loaded");
-        },
-        undefined,
-        (error) => {
-          console.error("Failed to load test cube", error);
-          setStatus({
-            sceneMessage: "Test cube failed to load.",
-          });
-        }
-      );
-    };
-
     const loadParthenon = () => {
       loader.load(
         PARTHENON_MODEL_PATH,
@@ -370,7 +335,6 @@ const ParthenonScene = () => {
       );
     };
 
-    loadSimpleModel();
     setTimeout(loadParthenon, 100);
 
     memoryRegistrars.forEach((register) => register(addMemoryObject));
